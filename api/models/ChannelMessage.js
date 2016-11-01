@@ -11,6 +11,9 @@ module.exports = {
     message: {
       type: 'text'
     },
+    from: {
+      model: 'user'
+    },
     channel: {
       model: 'channel'
     }

@@ -11,6 +11,12 @@ module.exports = {
     message: {
       type: 'text'
     },
+    from: {
+      model: 'user'
+    },
+    to: {
+      model: 'user'
+    },
     team: {
       model: 'team'
     }
