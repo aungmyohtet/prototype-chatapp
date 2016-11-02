@@ -6,6 +6,78 @@
  */
 
 module.exports = {
+
+	index: function(req, res) {
+		var teamName = req.param('teamName');
+		Team.findOne({name: teamName}).exec(function(err, team) {
+      if (err) {
+				return res.serverError(err);
+			}
+
+			else if (team && !req.session.user) {
+				console.log("Team exists and not loggedin")
+				return res.view('teamLogin', {'teamName': teamName});
+			}
+
+			else if (team && req.session.user) {
+				//return enter();
+			}
+
+			else {
+				console.log('homepage')
+				res.view('homepage');
+			}
+		});
+
+	},
+
+
+	login: function(req, res) {
+    var userName = req.param('userName');
+		var password = req.param('password');
+		var teamId = null;
+		async.series(
+			[
+				function(callback) {
+          TeamUserAuth.findOne({userName: userName, password: password}).exec(function(err, userAuth) {
+            if (err) {
+							callback(err);
+						} else if (userAuth) {
+							teamId = userAuth.teamId;
+							req.session.teamId = teamId;
+							req.session.userName = userName;
+							callback();
+						} else {
+							callback({message: 'no user'})
+						}
+					});
+				},
+				function(callback) {
+					TeamUser.find({teamId : teamId}).exec(function(err, teamUsers) {
+            if (err) {
+							callback(err);
+						} else if (teamUsers) {
+							for (var i = 0; i < teamUsers.length; i++) {
+								console.log(teamUsers[i].userName);
+							}
+
+							var userNames = teamUsers.map(function(teamUser) {
+                return teamUser.name;
+							});
+							console.log(JSON.stringify(userNames));
+							return res.view('teamHome', {layout:null, teamUsers : teamUsers});
+						} else {
+							callback({message : 'no users'});
+						}
+					});
+				}
+			],
+			function(err) {
+        res.serverError(err);
+			}
+		)
+	},
+
 	create: function(req, res) {
 		var teamData = {
 			name: req.param('teamName'),
