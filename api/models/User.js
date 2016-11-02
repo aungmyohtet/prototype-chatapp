@@ -9,8 +9,7 @@ module.exports = {
 
   attributes: {
     userName:{
-      type: 'string',
-      unique: true
+      type: 'string'
     },
     name: {
       type: 'string'
