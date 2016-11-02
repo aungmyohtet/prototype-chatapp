@@ -44,7 +44,11 @@ module.exports.routes = {
     view: 'teamNew'
   },
 
-  'post /team/create': 'TeamController.create'
+  'post /team/create': 'TeamController.create',
+
+  'get /team/:teamName/register': 'TeamController.registerGet',
+
+  'post /team/:teamName/register': 'TeamController.registerPost',
 
   /***************************************************************************
   *                                                                          *
