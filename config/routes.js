@@ -35,9 +35,16 @@ module.exports.routes = {
   '/': {
     view: 'homepage'
   },
+
   'get /team': {
     view: 'teamTest'
-  }
+  },
+
+  'get /team/create': {
+    view: 'teamNew'
+  },
+
+  'post /team/create': 'TeamController.create'
 
   /***************************************************************************
   *                                                                          *
