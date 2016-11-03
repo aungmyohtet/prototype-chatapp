@@ -127,6 +127,9 @@ html,body {
   display: none;
 }
 
+.user-name-list-element {
+  padding-left: 8px;
+}
 .user-status-online {
   position: absolute;
   right: 0;
