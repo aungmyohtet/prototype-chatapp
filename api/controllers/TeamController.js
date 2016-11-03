@@ -77,6 +77,7 @@ module.exports = {
             if (err) {
 							callback(err);
 						} else if (userAuth) {
+							req.session.userName = userData.userName;
               // find all users in this team
 							if (UserService.userDirectory.hasOwnProperty(userData.team)) {
 								var users = UserService.userDirectory[userData.team];
@@ -285,6 +286,35 @@ module.exports = {
 				res.redirect('/');
 			}
 		});
+	},
+
+	socketJoin: function(req, res) {
+		if (!req.isSocket) {
+			return res.badRequest();
+		}
+
+		var teamId = req.session.teamId;
+		var userName = req.session.userName;
+
+		sails.sockets.join(req, teamId, function(err) {
+			if (err) {
+				return res.serverError(err);
+			}
+		});
+
+		var users = UserService.userDirectory[teamId];
+		for (var i = 0; i < users.length; i++) {
+			if (users[i].userName == userName) {
+				users[i].status = "user-status-online";
+			}
+		}
+
+		var socketId = sails.sockets.getId(req);
+		// => "BetX2G-2889Bg22xi-jy"
+		sails.sockets.broadcast(teamId,'newUser', {userName: userName});
+		sails.log('My socket ID is: ' + socketId);
+
+		return res.json(socketId);
 	}
 
 

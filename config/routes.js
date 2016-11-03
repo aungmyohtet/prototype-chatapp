@@ -54,6 +54,8 @@ module.exports.routes = {
 
   'post /team/:teamName/register': 'TeamController.registerPost',
 
+  'get /team/socket/join': 'TeamController.socketJoin'
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

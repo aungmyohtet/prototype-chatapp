@@ -1,19 +1,33 @@
 var UserList = React.createClass({
-  addUser: function(){
+  handleClicked: function() {
+    console.log("Have not implemented yet");
+  },
+  updateOnlineUserStatus: function(userName){
     console.log("is Array");
     console.log(Array.isArray(this.state.users));
+    var users = this.state.users.slice(0);
+    for (var i = 0; i < users.length; i++) {
+      console.log("Status is now");
+      console.log(users[i].status);
+      if (users[i].userName == userName) {
+        users[i].status = "user-status-online";
+      }
+    }
     this.setState({
-      users: this.state.users.concat([{name: 'user3'}])
+      users: users
     });
   },
   componentWillMount: function() {
-    console.log("This was called");
+    console.log("This was called >> new");
     io.socket.get('/team/socket/join', function (resData) {
        console.log(resData);
     });
 
+    var self = this;
     io.socket.on('newUser', function(data) {
-      console.log(data.userSocketId);
+      console.log("new user arrived");
+      //console.log(data.userName);
+      self.updateOnlineUserStatus(data.userName);
     });
   },
   getInitialState: function(){
@@ -35,7 +49,7 @@ var UserList = React.createClass({
         </div>
       )});
       return (
-        <div className="userList" onClick={this.addUser}>
+        <div className="userList" onClick={this.handleClicked}>
         {userNodes}
         </div>
       );
