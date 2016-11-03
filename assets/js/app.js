@@ -29,6 +29,9 @@ var UserList = React.createClass({
           <span className="user-name-list-element">
             {user.name}
           </span>
+          <span className={user.status}>
+          &nbsp;
+          </span>
         </div>
       )});
       return (

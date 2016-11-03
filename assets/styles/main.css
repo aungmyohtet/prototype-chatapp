@@ -126,3 +126,17 @@ html,body {
 #not-current-thread {
   display: none;
 }
+
+.user-status-online {
+  position: absolute;
+  right: 0;
+  margin-right: 3px;
+  background: red;
+}
+
+.user-status-offline {
+  position: absolute;
+  right: 0;
+  margin-right: 3px;
+  background: green;
+}

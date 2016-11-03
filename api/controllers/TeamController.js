@@ -78,17 +78,32 @@ module.exports = {
 							callback(err);
 						} else if (userAuth) {
               // find all users in this team
+							if (UserService.userDirectory.hasOwnProperty(userData.team)) {
+								var users = UserService.userDirectory[userData.team];
+								for (var i = 0; i < users.length; i++) {
+									if (users[i].userName == userData.userName) {
+										users[i].status = "user-status-online";
+									}
+								}
+								return res.view('teamHome', {layout: null, teamUsers : UserService.userDirectory[userData.team]});
+							}
 							User.find({team: userData.team}).exec(function(err, users) {
 								if (err) {
 									return callback(err);
 								}
 								else if (users) {
+									UserService.userDirectory[userData.team] = users;
 									for (var i = 0; i < users.length; i++) {
-										console.log(users[i].name);
+										if (users[i].userName == userData.userName) {
+											users[i].status = "user-status-online";
+										} else {
+											users[i].status = "user-status-offline";
+										}
 									}
 									var userNames = users.map(function(user){
                     return user.name;
 									});
+
 
 									return res.view('teamHome', {layout: null, teamUsers : users});
 								} else {
