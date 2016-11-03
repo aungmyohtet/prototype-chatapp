@@ -105,7 +105,6 @@ module.exports = {
                     return user.name;
 									});
 
-
 									return res.view('teamHome', {layout: null, teamUsers : users});
 								} else {
 									callback(err);
@@ -311,11 +310,17 @@ module.exports = {
 
 		var socketId = sails.sockets.getId(req);
 		// => "BetX2G-2889Bg22xi-jy"
+
+    if (!SocketService.socketsByTeam.hasOwnProperty(teamId)) {
+			SocketService.socketsByTeam.teamId = {};
+		}
+
+	  SocketService.socketsByTeam.teamId.userName = socketId;
+
 		sails.sockets.broadcast(teamId,'newUser', {userName: userName}, req);
 		sails.log('My socket ID is: ' + socketId);
 
 		return res.json(socketId);
 	}
-
 
 };
