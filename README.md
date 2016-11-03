@@ -1,3 +1,3 @@
 # prototype-chat-app-new
 
-a [Sails](http://sailsjs.org) application
+a prototype chat application by using sails and react frameworks.
