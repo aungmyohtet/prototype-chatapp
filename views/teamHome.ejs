@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <link rel="stylesheet" href="/styles/main.css" />
+</head>
+<boy>
+  <div class="main-container">
+
+    <div id="top-nav-bar">
+    </div>
+
+    <div id="content-container">
+
+      <div id="left-container">
+        <div id="team-des-area">
+        </div>
+        <div id="user-list-container">
+
+        </div>
+      </div>
+
+      <div id="right-container">
+
+        <div class="area-per-thread" id="not-current-thread">
+          <div class="message-list-container">
+            <div class="message-list">
+              <div class="message-container">
+                <span class="user-name">aungmyohtet</span> <span class="time">2:30</span>
+                <div class="message">Actual Message </div>
+                <div class="message">Next Message </div>
+              </div>
+              <div class="message-divider"></div>
+              <div class="message-container">
+                <span class="user-name">aungmyohtet</span> <span class="time">2:30</span>
+                <div class="message">Actual Message </div>
+                <div class="message">Next Message </div>
+              </div>
+              <div class="message-divider"></div>
+
+              <div class="message-container">
+                <span class="user-name">aungmyohtet</span> <span class="time">2:30</span>
+                <div class="message">Actual Message </div>
+                <div class="message">Next Message </div>
+              </div>
+              <div class="message-divider"></div>
+              <div class="message-container">
+                <span class="user-name">aungmyohtet</span> <span class="time">2:30</span>
+                <div class="message">Actual Message </div>
+                <div class="message">Next Message </div>
+              </div>
+              <div class="message-divider"></div>
+
+            </div>
+          </div>
+          <div class="message-box-container">
+            <form class="message-form">
+              <textarea class="message-input">
+              </textarea>
+            </form>
+          </div>
+        </div>
+
+        <div class="area-per-thread" id="current-thread">
+          <div class="message-list-container">
+            <div class="message-list">
+              <div class="message-container">
+                <span class="user-name">alan</span> <span class="time">2:30</span>
+                <div class="message">Actual Message </div>
+                <div class="message">Next Message </div>
+              </div>
+              <div class="message-divider"></div>
+              <div class="message-container">
+                <span class="user-name">alan</span> <span class="time">2:30</span>
+                <div class="message">Actual Message </div>
+                <div class="message">Next Message </div>
+              </div>
+              <div class="message-divider"></div>
+
+              <div class="message-container">
+                <span class="user-name">alan</span> <span class="time">2:30</span>
+                <div class="message">Actual Message </div>
+                <div class="message">Next Message </div>
+              </div>
+              <div class="message-divider"></div>
+              <div class="message-container">
+                <span class="user-name">aungmyohtet</span> <span class="time">2:30</span>
+                <div class="message">Actual Message </div>
+                <div class="message">Next Message </div>
+              </div>
+              <div class="message-divider"></div>
+
+            </div>
+          </div>
+          <div class="message-box-container">
+            <form class="message-form">
+              <textarea class="message-input">
+              </textarea>
+            </form>
+          </div>
+        </div>
+      </div><!-- end of right-container -->
+
+    </div>
+
+  </div>
+</body>
+<script src="/js/dependencies/sails.io.js"></script>
+<script src="/js/dependencies/ajax.googleapis.com-ajax-libs-jquery-1.12.4-jquery.min.js"></script>
+<script src="/js/dependencies/react.js"></script>
+<script src="/js/dependencies/react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+<script>
+var teamUsers = <%- JSON.stringify(teamUsers) %>;
+</script>
+<script type="text/babel" src="/js/app.js"></script>
+
+</html>

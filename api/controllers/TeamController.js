@@ -33,41 +33,71 @@ module.exports = {
 
 
 	login: function(req, res) {
-    var userName = req.param('userName');
-		var password = req.param('password');
-		var teamId = null;
+    var teamName = req.param('teamName');
+		var userData = {
+			userName: req.param('userName')
+		};
+
+		var userAuthData = {
+			password: req.param('password')
+		};
+
 		async.series(
 			[
-				function(callback) {
-          TeamUserAuth.findOne({userName: userName, password: password}).exec(function(err, userAuth) {
+				function findTeam(callback) {
+          Team.findOne({name: teamName}).exec(function(err, team) {
             if (err) {
 							callback(err);
-						} else if (userAuth) {
-							teamId = userAuth.teamId;
-							req.session.teamId = teamId;
-							req.session.userName = userName;
+						} else if (team) {
+							userData.team = team.id;
+							req.session.teamId = team.id;
+							req.session.teamName = team.teamName;
 							callback();
 						} else {
-							callback({message: 'no user'})
+							callback({message: 'no team'})
 						}
 					});
 				},
-				function(callback) {
-					TeamUser.find({teamId : teamId}).exec(function(err, teamUsers) {
+
+				function findUser(callback) {
+					User.findOne(userData).exec(function(err, user) {
             if (err) {
 							callback(err);
-						} else if (teamUsers) {
-							for (var i = 0; i < teamUsers.length; i++) {
-								console.log(teamUsers[i].userName);
-							}
-
-							var userNames = teamUsers.map(function(teamUser) {
-                return teamUser.name;
-							});
-							console.log(JSON.stringify(userNames));
-							return res.view('teamHome', {layout:null, teamUsers : teamUsers});
+						} else if (user) {
+						  userAuthData.user = user.id;
+							callback();
 						} else {
 							callback({message : 'no users'});
+						}
+					});
+				},
+
+				function findUserAuth(callback) {
+					UserAuth.findOne(userAuthData).exec(function(err, userAuth){
+            if (err) {
+							callback(err);
+						} else if (userAuth) {
+              // find all users in this team
+							User.find({team: userData.team}).exec(function(err, users) {
+								if (err) {
+									return callback(err);
+								}
+								else if (users) {
+									for (var i = 0; i < users.length; i++) {
+										console.log(users[i].name);
+									}
+									var userNames = users.map(function(user){
+                    return user.name;
+									});
+
+									return res.view('teamHome', {layout: null, teamUsers : users});
+								} else {
+									callback(err);
+								}
+							});
+
+						} else {
+							callback(err);
 						}
 					});
 				}
