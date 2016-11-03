@@ -311,7 +311,7 @@ module.exports = {
 
 		var socketId = sails.sockets.getId(req);
 		// => "BetX2G-2889Bg22xi-jy"
-		sails.sockets.broadcast(teamId,'newUser', {userName: userName});
+		sails.sockets.broadcast(teamId,'newUser', {userName: userName}, req);
 		sails.log('My socket ID is: ' + socketId);
 
 		return res.json(socketId);
