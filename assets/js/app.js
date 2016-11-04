@@ -18,32 +18,32 @@ var UserList = React.createClass({
     });
 
     // Let's check if the browser supports notifications
-  if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
-  }
+    if (!("Notification" in window)) {
+      alert("This browser does not support desktop notification");
+    }
 
-  // Let's check whether notification permissions have already been granted
-  else if (Notification.permission === "granted") {
-    // If it's okay let's create a notification
-    var notification = new Notification(userName+ " is online now.");
-  }
+    // Let's check whether notification permissions have already been granted
+    else if (Notification.permission === "granted") {
+      // If it's okay let's create a notification
+      var notification = new Notification(userName+ " is online now.");
+    }
 
-  // Otherwise, we need to ask the user for permission
-  else if (Notification.permission !== 'denied') {
-    Notification.requestPermission(function (permission) {
-      // If the user accepts, let's create a notification
-      if (permission === "granted") {
-        var notification = new Notification(userName+ " is online now.");
-      }
-    });
-  }
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== 'denied') {
+      Notification.requestPermission(function (permission) {
+        // If the user accepts, let's create a notification
+        if (permission === "granted") {
+          var notification = new Notification(userName+ " is online now.");
+        }
+      });
+    }
 
   },
 
   componentWillMount: function() {
     console.log("This was called >> new");
     io.socket.get('/team/socket/join', function (resData) {
-       console.log(resData);
+      console.log(resData);
     });
 
     var self = this;
@@ -63,13 +63,13 @@ var UserList = React.createClass({
     var url = this.props.url;
     var userNodes = this.state.users.map(function (user, index) {
       return (
-        <div className="user-display" id={user.name}>
-          <span className="user-name-list-element">
-            {user.name}
-          </span>
-          <span className={user.status}>
-          &nbsp;
-          </span>
+        <div className="user-display" id={user.userName}>
+        <span className="user-name-list-element">
+        {user.name}
+        </span>
+        <span className={user.status}>
+        &nbsp;
+        </span>
         </div>
       )});
       return (
@@ -80,7 +80,64 @@ var UserList = React.createClass({
     }
   });
 
-ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
+  ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
+
+  var MessageListContainer = React.createClass({
+    componentWillMount: function() {
+
+    },
+    getInitialState: function() {
+      return {
+        messagesByUsers : [
+          {
+            id: '1',
+            className:'not-current-thread',
+            messages: [
+              {
+                userName: 'aung',
+                time: '2:00',
+                messageContent: 'hi'
+              },
+              {
+                userName: 'myo',
+                time: '3:00',
+                messageContent: 'hello'
+              }
+            ]
+          },
+          {
+            id: '2',
+            className:'current-thread',
+            messages: [
+              {
+                userName: 'hardy',
+                time: '2:00',
+                messageContent: 'hi'
+              },
+              {
+                userName: 'ramanujan',
+                time: '3:00',
+                messageContent: 'hello'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    render: function() {
+      var messagesByUsers = this.state.messagesByUsers.map(function(messageByUsers,index){
+        return (
+          <MessageList messageByUsers={messageByUsers}/>
+        );
+      });
+      return (
+        <div>
+        {messagesByUsers}
+        </div>
+      );
+    }
+  }
+  );
 
 
   var MessageList = React.createClass({
@@ -98,39 +155,23 @@ ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
 
     getInitialState: function() {
       return {
-        messages: [
-          {
-            userName: 'aung',
-            time:'2:30',
-            messageContent: 'Hi'
-          },
-          {
-            userName: 'myo',
-            time:'2:31',
-            messageContent: 'Hello'
-          },
-          {
-            userName: 'aung',
-            time:'2:32',
-            messageContent: 'Hey'
-          }
-        ]
-      }
+        messages: this.props.messageByUsers.messages
+      };
     },
 
     render: function() {
       return (
-        <div className="area-per-thread" class="current-thread">
-          <div className="message-list-container">
-          <div className="message-list">
-          {
-            this.state.messages.map(function(message) {
-              return <MessageRegion message={message}/>
-            })
-          }
-          </div>
-          </div>
-         <MessageBoxContainer addMessage={this.addMessage}/>
+        <div className="area-per-thread" class={this.props.messageByUsers.className}>
+        <div className="message-list-container">
+        <div className="message-list">
+        {
+          this.state.messages.map(function(message) {
+            return <MessageRegion message={message}/>
+          })
+        }
+        </div>
+        </div>
+        <MessageBoxContainer addMessage={this.addMessage}/>
         </div>
       );
     }
@@ -141,9 +182,9 @@ ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
       return (
         <div>
         <div className="message-container">
-         <span className="user-name">{this.props.message.userName}</span>
-         <span className="time">{this.props.message.time}</span>
-         <div className="message">{this.props.message.messageContent}</div>
+        <span className="user-name">{this.props.message.userName}</span>
+        <span className="time">{this.props.message.time}</span>
+        <div className="message">{this.props.message.messageContent}</div>
         </div>
         <div className="message-divider"></div>
         </div>
@@ -176,15 +217,15 @@ ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
     render: function() {
       return (
         <div className="message-box-container">
-          <form className="message-form">
-            <textarea className="message-input" onKeyPress={this.handleKeyPressed}>
-            {this.state.inputText}
-            </textarea>
-          </form>
+        <form className="message-form">
+        <textarea className="message-input" onKeyPress={this.handleKeyPressed}>
+        {this.state.inputText}
+        </textarea>
+        </form>
         </div>
       );
     }
   });
 
 
-ReactDOM.render(<MessageList/>, document.getElementById('right-container'));
+  ReactDOM.render(<MessageListContainer/>, document.getElementById('right-container'));

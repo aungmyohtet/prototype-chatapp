@@ -123,7 +123,7 @@ html,body {
   border: 2px solid #E0E0E0;
 }
 
-#not-current-thread {
+.not-current-thread {
   display: none;
 }
 
