@@ -88,6 +88,14 @@ ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
       console.log("componentWillMount function in MessageList");
     },
 
+    addMessage: function(message) {
+      var messages = this.state.messages.slice(0);
+      messages.push(message);
+      this.setState({
+        messages: messages
+      });
+    },
+
     getInitialState: function() {
       return {
         messages: [
@@ -122,12 +130,7 @@ ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
           }
           </div>
           </div>
-          <div className="message-box-container">
-            <form className="message-form">
-              <textarea className="message-input">
-              </textarea>
-            </form>
-          </div>
+         <MessageBoxContainer addMessage={this.addMessage}/>
         </div>
       );
     }
@@ -143,6 +146,41 @@ ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
          <div className="message">{this.props.message.messageContent}</div>
         </div>
         <div className="message-divider"></div>
+        </div>
+      );
+    }
+  });
+
+  var MessageBoxContainer = React.createClass({
+    handleKeyPressed: function(e) {
+      console.log("handleKeyPressed");
+      console.log(e.currentTarget.value);
+      var code = (e.keyCode ? e.keyCode : e.which);
+      if(code == 13){
+        e.preventDefault();
+        var message = {
+          userName: 'aungmyohtet',
+          time: '3:00',
+          messageContent: e.currentTarget.value
+        };
+        this.props.addMessage(message);
+        e.currentTarget.value = "";
+        console.log("handled key press event.")
+      }
+    },
+    getInitialState: function() {
+      return {
+        inputText: ""
+      }
+    },
+    render: function() {
+      return (
+        <div className="message-box-container">
+          <form className="message-form">
+            <textarea className="message-input" onKeyPress={this.handleKeyPressed}>
+            {this.state.inputText}
+            </textarea>
+          </form>
         </div>
       );
     }
