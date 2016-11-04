@@ -79,7 +79,8 @@ var UserList = React.createClass({
       );
     }
   });
-  ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
+
+ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
 
 
   var MessageList = React.createClass({
@@ -89,12 +90,63 @@ var UserList = React.createClass({
 
     getInitialState: function() {
       return {
-        message: "not implemented yet"
+        messages: [
+          {
+            userName: 'aung',
+            time:'2:30',
+            messageContent: 'Hi'
+          },
+          {
+            userName: 'myo',
+            time:'2:31',
+            messageContent: 'Hello'
+          },
+          {
+            userName: 'aung',
+            time:'2:32',
+            messageContent: 'Hey'
+          }
+        ]
       }
     },
 
     render: function() {
-      //To implement here
-      return <div className="message-list">Div New</div>
+      return (
+        <div className="area-per-thread" class="current-thread">
+          <div className="message-list-container">
+          <div className="message-list">
+          {
+            this.state.messages.map(function(message) {
+              return <MessageRegion message={message}/>
+            })
+          }
+          </div>
+          </div>
+          <div className="message-box-container">
+            <form className="message-form">
+              <textarea className="message-input">
+              </textarea>
+            </form>
+          </div>
+        </div>
+      );
     }
   });
+
+  var MessageRegion = React.createClass({
+    render: function() {
+      return (
+        <div>
+        <div className="message-container">
+         <span className="user-name">{this.props.message.userName}</span>
+         <span className="time">{this.props.message.time}</span>
+         <div className="message">{this.props.message.messageContent}</div>
+        </div>
+        <div className="message-divider"></div>
+        </div>
+      );
+    }
+  });
+
+
+ReactDOM.render(<MessageList/>, document.getElementById('right-container'));
