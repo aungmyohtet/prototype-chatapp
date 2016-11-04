@@ -211,7 +211,7 @@ module.exports = {
 
 		Team.findOne({name : teamName}).exec(function(err, team) {
 			if (err) {
-				return res.serverError;
+				return res.serverError(err);
 			} else if (team) {
 				return res.view('teamRegister', {teamName : teamName});
 			} else {

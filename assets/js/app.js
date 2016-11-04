@@ -39,6 +39,7 @@ var UserList = React.createClass({
   }
 
   },
+
   componentWillMount: function() {
     console.log("This was called >> new");
     io.socket.get('/team/socket/join', function (resData) {
@@ -52,6 +53,7 @@ var UserList = React.createClass({
       self.updateOnlineUserStatus(data.userName);
     });
   },
+
   getInitialState: function(){
     return {
       users: teamUsers
@@ -78,3 +80,21 @@ var UserList = React.createClass({
     }
   });
   ReactDOM.render(<UserList/>, document.getElementById('user-list-container'));
+
+
+  var MessageList = React.createClass({
+    componentWillMount: function() {
+      console.log("componentWillMount function in MessageList");
+    },
+
+    getInitialState: function() {
+      return {
+        message: "not implemented yet"
+      }
+    },
+
+    render: function() {
+      //To implement here
+      return <div className="message-list">Div New</div>
+    }
+  });
