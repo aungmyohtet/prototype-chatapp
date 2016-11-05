@@ -2,7 +2,7 @@ var UserList = React.createClass({
   handleClicked: function(e) {
     console.log("Have implemented");
     console.log(e.currentTarget.id);
-    PubSub.publish( 'hello', 'hello world!' );
+    PubSub.publish( 'hello', e.currentTarget.id);
   },
   updateOnlineUserStatus: function(userName){
     console.log("is Array");
@@ -87,16 +87,32 @@ var UserList = React.createClass({
 
   var MessageListContainer = React.createClass({
     componentWillMount: function() {
+      var self = this;
       var token = PubSub.subscribe( 'hello', function(msg, data) {
         console.log(data);
-        console.log(msg);
+        var newMessagesByUsers = self.state.messagesByUsers.slice(0);
+        for (var i = 0; i < newMessagesByUsers.length; i++) {
+          if (newMessagesByUsers[i].id == data) {
+            newMessagesByUsers[i].className = 'current-thread';
+            console.log("current-thread");
+          } else {
+            newMessagesByUsers[i].className = 'not-current-thread';
+            console.log("not-current-thread");
+          }
+        }
+        newMessagesByUsers[1].messages[0].userName = 'aungmyohtet'
+        self.setState({
+          messagesByUsers: newMessagesByUsers
+        });
+
+        self.forceUpdate();
       });
     },
     getInitialState: function() {
       return {
         messagesByUsers : [
           {
-            id: '1',
+            id: 'aung',
             className:'not-current-thread',
             messages: [
               {
@@ -105,14 +121,14 @@ var UserList = React.createClass({
                 messageContent: 'hi'
               },
               {
-                userName: 'myo',
+                userName: 'erdos',
                 time: '3:00',
                 messageContent: 'hello'
               }
             ]
           },
           {
-            id: '2',
+            id: 'myo',
             className:'current-thread',
             messages: [
               {
@@ -167,7 +183,7 @@ var UserList = React.createClass({
 
     render: function() {
       return (
-        <div className="area-per-thread" class={this.props.messageByUsers.className}>
+        <div className="area-per-thread" className={this.props.messageByUsers.className}>
         <div className="message-list-container">
         <div className="message-list">
         {
