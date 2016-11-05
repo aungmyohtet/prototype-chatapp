@@ -1,8 +1,11 @@
+var currentChattingUserName = "aung";
+var currentChattingUserId = "1";
 var UserList = React.createClass({
   handleClicked: function(e) {
     console.log("Have implemented");
     console.log(e.currentTarget.id);
     PubSub.publish( 'hello', e.currentTarget.id);
+    currentChattingUserId = e.currentTarget.id;
   },
   updateOnlineUserStatus: function(userName){
     console.log("is Array");
@@ -66,7 +69,7 @@ var UserList = React.createClass({
     var self = this;
     var userNodes = this.state.users.map(function (user, index) {
       return (
-        <div className="user-display" id={user.userName} onClick={self.handleClicked}>
+        <div className="user-display" key={user.id} id={user.id} onClick={self.handleClicked}>
         <span className="user-name-list-element">
         {user.name}
         </span>
@@ -107,12 +110,38 @@ var UserList = React.createClass({
 
         self.forceUpdate();
       });
+
+      io.socket.on('testing', function(data) {
+        console.log('testing message');
+        console.log(data);
+      });
+      //
+      io.socket.on('privateMessage', function(data) {
+        console.log("Private message arrived");
+        var newMessagesByUsers = self.state.messagesByUsers.slice(0);
+        for (var i = 0; i < newMessagesByUsers.length; i++) {
+          if (newMessagesByUsers[i].id == data.senderId) {
+            newMessagesByUsers[i].messages.push({
+              userName: data.senderName,
+              time: data.time,
+              messageContent: data.message
+            });
+            break;
+          }
+        }
+
+        self.setState({
+          messagesByUsers: newMessagesByUsers
+        });
+
+        self.forceUpdate();
+      });
     },
     getInitialState: function() {
       return {
         messagesByUsers : [
           {
-            id: 'aung',
+            id: '1',
             className:'not-current-thread',
             messages: [
               {
@@ -128,8 +157,8 @@ var UserList = React.createClass({
             ]
           },
           {
-            id: 'myo',
-            className:'current-thread',
+            id: '2',
+            className:'not-current-thread',
             messages: [
               {
                 userName: 'hardy',
@@ -222,13 +251,15 @@ var UserList = React.createClass({
       if(code == 13){
         e.preventDefault();
         var message = {
+          to: currentChattingUserId,
           userName: 'aungmyohtet',
           time: '3:00',
           messageContent: e.currentTarget.value
         };
-        this.props.addMessage(message);
+        //this.props.addMessage(message);
         e.currentTarget.value = "";
         console.log("handled key press event.")
+        io.socket.post('/message/private', message);
       }
     },
     getInitialState: function() {

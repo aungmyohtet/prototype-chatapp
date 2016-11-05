@@ -65,6 +65,7 @@ module.exports = {
 							callback(err);
 						} else if (user) {
 						  userAuthData.user = user.id;
+							req.session.userId = user.id;
 							callback();
 						} else {
 							callback({message : 'no users'});
@@ -294,6 +295,7 @@ module.exports = {
 
 		var teamId = req.session.teamId;
 		var userName = req.session.userName;
+		var userId = req.session.userId;
 
 		sails.sockets.join(req, teamId, function(err) {
 			if (err) {
@@ -311,11 +313,17 @@ module.exports = {
 		var socketId = sails.sockets.getId(req);
 		// => "BetX2G-2889Bg22xi-jy"
 
+		console.log("bradcasting to the joined socket");
+		sails.sockets.broadcast(socketId, 'testing', "hello");
+		console.log(socketId);
+
     if (!SocketService.socketsByTeam.hasOwnProperty(teamId)) {
 			SocketService.socketsByTeam.teamId = {};
 		}
 
 	  SocketService.socketsByTeam.teamId.userName = socketId;
+		SocketService.socketsByTeam.teamId.userId = socketId;
+		console.log(SocketService.socketsByTeam.teamId.userId);
 
 		sails.sockets.broadcast(teamId,'newUser', {userName: userName}, req);
 		sails.log('My socket ID is: ' + socketId);
