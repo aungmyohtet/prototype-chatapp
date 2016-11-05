@@ -1,6 +1,8 @@
 var UserList = React.createClass({
-  handleClicked: function() {
-    console.log("Have not implemented yet");
+  handleClicked: function(e) {
+    console.log("Have implemented");
+    console.log(e.currentTarget.id);
+    PubSub.publish( 'hello', 'hello world!' );
   },
   updateOnlineUserStatus: function(userName){
     console.log("is Array");
@@ -61,9 +63,10 @@ var UserList = React.createClass({
   },
   render: function(){
     var url = this.props.url;
+    var self = this;
     var userNodes = this.state.users.map(function (user, index) {
       return (
-        <div className="user-display" id={user.userName}>
+        <div className="user-display" id={user.userName} onClick={self.handleClicked}>
         <span className="user-name-list-element">
         {user.name}
         </span>
@@ -73,7 +76,7 @@ var UserList = React.createClass({
         </div>
       )});
       return (
-        <div className="userList" onClick={this.handleClicked}>
+        <div className="userList">
         {userNodes}
         </div>
       );
@@ -84,7 +87,10 @@ var UserList = React.createClass({
 
   var MessageListContainer = React.createClass({
     componentWillMount: function() {
-
+      var token = PubSub.subscribe( 'hello', function(msg, data) {
+        console.log(data);
+        console.log(msg);
+      });
     },
     getInitialState: function() {
       return {
