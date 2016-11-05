@@ -40,15 +40,16 @@ module.exports.routes = {
     view: 'teamTest'
   },
 
-  'get /team/:teamName': 'TeamController.index',
-
-  'post /team/:teamName': 'TeamController.login',
 
   'get /team/create': {
     view: 'teamNew'
   },
 
   'post /team/create': 'TeamController.create',
+
+  'get /team/:teamName': 'TeamController.index',
+
+  'post /team/:teamName': 'TeamController.login',
 
   'get /team/:teamName/register': 'TeamController.registerGet',
 
