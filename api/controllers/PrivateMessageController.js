@@ -32,25 +32,33 @@ module.exports = {
 				console.log("error");
 			} else if (privateMessage) {
 
-				console.log("Private message created");
-				var senderId = req.session.userId;
-				var recepientId = req.param('to');
-				console.log("sender is " + userId);
-				console.log("recepient is " + recepientId);
-				var recepientSocket;
-				var socketMapByTeam = SocketService.socketsByTeam.get(teamId);
-				socketMapByTeam.forEach(function(value, key, map) {
-					console.log(key+"======>"+value);
-					if (key == recepientId) {
-						recepientSocket = value;
-						return;
+        PrivateMessage.findOne(privateMessage).populate('from').populate('to').exec(function(err, newPrivateMessage){
+          if (err) {
+						return serverError(err);
 					}
+
+					console.log("Private message created");
+					var senderId = req.session.userId;
+					var recepientId = req.param('to');
+					console.log("sender is " + userId);
+					console.log("recepient is " + recepientId);
+					var recepientSocket;
+					var socketMapByTeam = SocketService.socketsByTeam.get(teamId);
+					socketMapByTeam.forEach(function(value, key, map) {
+						console.log(key+"======>"+value);
+						if (key == recepientId) {
+							recepientSocket = value;
+							return;
+						}
+					});
+					var senderSocket = socketMapByTeam.get(senderId);
+					console.log(senderSocket);
+					console.log(recepientSocket);
+					sails.sockets.broadcast(senderSocket, 'privateMessage', newPrivateMessage);
+					sails.sockets.broadcast(recepientSocket, 'privateMessage', newPrivateMessage);
+					console.log("Sending private messages");
 				});
-				var senderSocket = socketMapByTeam.get(senderId);
-				console.log(senderSocket);
-				console.log(recepientSocket);
-				sails.sockets.broadcast(senderSocket, 'privateMessageSelf', messageToSent);
-				sails.sockets.broadcast(recepientSocket, 'privateMessage', messageToSent);
+
 			}
 		});
 	},

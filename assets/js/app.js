@@ -110,52 +110,7 @@ var UserList = React.createClass({
         self.forceUpdate();
       });
 
-      io.socket.on('testing', function(data) {
-        console.log('testing message');
-        console.log(data);
-      });
-      //
-      io.socket.on('privateMessage', function(data) {
-        console.log("Private message arrived");
-        var newMessagesByUsers = self.state.messagesByUsers.slice(0);
-        for (var i = 0; i < newMessagesByUsers.length; i++) {
-          if (newMessagesByUsers[i].id == data.senderId) {
-            newMessagesByUsers[i].messages.push({
-              userName: data.senderName,
-              time: data.time,
-              messageContent: data.message
-            });
-            break;
-          }
-        }
 
-        self.setState({
-          messagesByUsers: newMessagesByUsers
-        });
-
-        self.forceUpdate();
-      });
-
-      io.socket.on('privateMessageSelf', function(data) {
-        console.log("Private self message arrived");
-        var newMessagesByUsers = self.state.messagesByUsers.slice(0);
-        for (var i = 0; i < newMessagesByUsers.length; i++) {
-          if (newMessagesByUsers[i].id == data.recepientId) {
-            newMessagesByUsers[i].messages.push({
-              userName: data.senderName,
-              time: data.time,
-              messageContent: data.message
-            });
-            break;
-          }
-        }
-
-        self.setState({
-          messagesByUsers: newMessagesByUsers
-        });
-
-        self.forceUpdate();
-      });
     },
     getInitialState: function() {
       return {
@@ -187,6 +142,30 @@ var UserList = React.createClass({
         self.setState({
           messages: resData
         });
+      });
+
+      io.socket.on('testing', function(data) {
+        console.log('testing message');
+        console.log(data);
+      });
+      //
+      io.socket.on('privateMessage', function(data) {
+        console.log("private message from server");
+        console.log(self.props.user.id);
+        console.log(data.from.id);
+        console.log(data.to.id);
+        console.log("logging");
+        if (self.props.user.id != data.from.id && self.props.user.id != data.to.id) {
+          return;
+        }
+        console.log("private message arrived!");
+        var newMessages = self.state.messages.slice(0);
+        newMessages.push(data);
+        self.setState({
+          messages: newMessages
+        });
+
+        self.forceUpdate();
       });
     },
 
