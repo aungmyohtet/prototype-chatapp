@@ -24,7 +24,8 @@ module.exports = {
 		 message: messageContent,
 		 time: '3:00',
 		 senderName: sender,
-		 senderId: req.session.userId
+		 senderId: req.session.userId,
+		 recepientId: req.param('to')
 	 };
 		PrivateMessage.create(privateMessage).exec(function(err, privateMessage) {
       if (err) {
@@ -48,7 +49,7 @@ module.exports = {
 				var senderSocket = socketMapByTeam.get(senderId);
 				console.log(senderSocket);
 				console.log(recepientSocket);
-				sails.sockets.broadcast(senderSocket, 'privateMessage', messageToSent);
+				sails.sockets.broadcast(senderSocket, 'privateMessageSelf', messageToSent);
 				sails.sockets.broadcast(recepientSocket, 'privateMessage', messageToSent);
 			}
 		});

@@ -136,6 +136,27 @@ var UserList = React.createClass({
 
         self.forceUpdate();
       });
+
+      io.socket.on('privateMessageSelf', function(data) {
+        console.log("Private self message arrived");
+        var newMessagesByUsers = self.state.messagesByUsers.slice(0);
+        for (var i = 0; i < newMessagesByUsers.length; i++) {
+          if (newMessagesByUsers[i].id == data.recepientId) {
+            newMessagesByUsers[i].messages.push({
+              userName: data.senderName,
+              time: data.time,
+              messageContent: data.message
+            });
+            break;
+          }
+        }
+
+        self.setState({
+          messagesByUsers: newMessagesByUsers
+        });
+
+        self.forceUpdate();
+      });
     },
     getInitialState: function() {
       return {
