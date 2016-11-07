@@ -1,3 +1,3 @@
 module.exports = {
-  socketsByTeam: {}
+  socketsByTeam: new Map()
 };

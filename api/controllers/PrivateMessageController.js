@@ -30,11 +30,24 @@ module.exports = {
       if (err) {
 				console.log("error");
 			} else if (privateMessage) {
+
 				console.log("Private message created");
 				var senderId = req.session.userId;
-				var recepientId = recepient;
-        var senderSocket = SocketService.socketsByTeam.teamId.userId;
-				var recepientSocket = SocketService.socketsByTeam.teamId.recepientId;
+				var recepientId = req.param('to');
+				console.log("sender is " + userId);
+				console.log("recepient is " + recepientId);
+				var recepientSocket;
+				var socketMapByTeam = SocketService.socketsByTeam.get(teamId);
+				socketMapByTeam.forEach(function(value, key, map) {
+					console.log(key+"======>"+value);
+					if (key == recepientId) {
+						recepientSocket = value;
+						return;
+					}
+				});
+				var senderSocket = socketMapByTeam.get(senderId);
+				console.log(senderSocket);
+				console.log(recepientSocket);
 				sails.sockets.broadcast(senderSocket, 'privateMessage', messageToSent);
 				sails.sockets.broadcast(recepientSocket, 'privateMessage', messageToSent);
 			}

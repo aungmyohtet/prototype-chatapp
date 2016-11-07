@@ -317,14 +317,21 @@ module.exports = {
 		sails.sockets.broadcast(socketId, 'testing', "hello");
 		console.log(socketId);
 
-    if (!SocketService.socketsByTeam.hasOwnProperty(teamId)) {
-			SocketService.socketsByTeam.teamId = {};
+    if (!SocketService.socketsByTeam.has(teamId)) {
+			console.log("Setting has map for this teamId" + teamId);
+			SocketService.socketsByTeam.set(teamId, new Map());
 		}
 
-	  SocketService.socketsByTeam.teamId.userName = socketId;
-		SocketService.socketsByTeam.teamId.userId = socketId;
-		console.log(SocketService.socketsByTeam.teamId.userId);
+	  //SocketService.socketsByTeam.teamId.userName = socketId;
+		SocketService.socketsByTeam.get(teamId).set(userId, socketId);
+		console.log(SocketService.socketsByTeam.get(teamId).get(userId));
+		console.log("this socket is by user id " + userId);
+		console.log("session user id is "+ req.session.userId);
 
+    console.log("Looping sockets");
+		SocketService.socketsByTeam.get(teamId).forEach(function(value, key, map){
+			console.log(key+"=>"+value);
+		});
 		sails.sockets.broadcast(teamId,'newUser', {userName: userName}, req);
 		sails.log('My socket ID is: ' + socketId);
 
