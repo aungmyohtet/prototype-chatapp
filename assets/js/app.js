@@ -93,19 +93,18 @@ var UserList = React.createClass({
       var self = this;
       var token = PubSub.subscribe( 'hello', function(msg, data) {
         console.log(data);
-        var newMessagesByUsers = self.state.messagesByUsers.slice(0);
-        for (var i = 0; i < newMessagesByUsers.length; i++) {
-          if (newMessagesByUsers[i].id == data) {
-            newMessagesByUsers[i].className = 'current-thread';
+        var newUsers = self.state.users.slice(0);
+        for (var i = 0; i < newUsers.length; i++) {
+          if (newUsers[i].id == data) {
+            newUsers[i].className = 'current-thread';
             console.log("current-thread");
           } else {
-            newMessagesByUsers[i].className = 'not-current-thread';
+            newUsers[i].className = 'not-current-thread';
             console.log("not-current-thread");
           }
         }
-        newMessagesByUsers[1].messages[0].userName = 'aungmyohtet'
         self.setState({
-          messagesByUsers: newMessagesByUsers
+          users: newUsers
         });
 
         self.forceUpdate();
@@ -160,51 +159,18 @@ var UserList = React.createClass({
     },
     getInitialState: function() {
       return {
-        messagesByUsers : [
-          {
-            id: '1',
-            className:'not-current-thread',
-            messages: [
-              {
-                userName: 'aung',
-                time: '2:00',
-                messageContent: 'hi'
-              },
-              {
-                userName: 'erdos',
-                time: '3:00',
-                messageContent: 'hello'
-              }
-            ]
-          },
-          {
-            id: '2',
-            className:'not-current-thread',
-            messages: [
-              {
-                userName: 'hardy',
-                time: '2:00',
-                messageContent: 'hi'
-              },
-              {
-                userName: 'ramanujan',
-                time: '3:00',
-                messageContent: 'hello'
-              }
-            ]
-          }
-        ]
+        users: teamUsers
       }
     },
     render: function() {
-      var messagesByUsers = this.state.messagesByUsers.map(function(messageByUsers,index){
+      var userDivs = this.state.users.map(function(user,index){
         return (
-          <MessageList messageByUsers={messageByUsers}/>
+          <MessageList user={user}/>
         );
       });
       return (
         <div>
-        {messagesByUsers}
+        {userDivs}
         </div>
       );
     }
@@ -215,6 +181,13 @@ var UserList = React.createClass({
   var MessageList = React.createClass({
     componentWillMount: function() {
       console.log("componentWillMount function in MessageList");
+      var self = this;
+      io.socket.get('/message/private/'+this.props.user.id, function(resData) {
+        console.log(JSON.stringify(resData));
+        self.setState({
+          messages: resData
+        });
+      });
     },
 
     addMessage: function(message) {
@@ -227,13 +200,13 @@ var UserList = React.createClass({
 
     getInitialState: function() {
       return {
-        messages: this.props.messageByUsers.messages
+        messages: []
       };
     },
 
     render: function() {
       return (
-        <div className="area-per-thread" className={this.props.messageByUsers.className}>
+        <div className="area-per-thread" className={this.props.user.className}>
         <div className="message-list-container">
         <div className="message-list">
         {
@@ -254,9 +227,8 @@ var UserList = React.createClass({
       return (
         <div>
         <div className="message-container">
-        <span className="user-name">{this.props.message.userName}</span>
-        <span className="time">{this.props.message.time}</span>
-        <div className="message">{this.props.message.messageContent}</div>
+        <span className="user-name">{this.props.message.from.name}</span>
+        <div className="message">{this.props.message.message}</div>
         </div>
         <div className="message-divider"></div>
         </div>

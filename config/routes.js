@@ -57,7 +57,9 @@ module.exports.routes = {
 
   'get /team/socket/join': 'TeamController.socketJoin',
 
-  'post /message/private': 'PrivateMessageController.postMessage'
+  'post /message/private': 'PrivateMessageController.postMessage',
+
+  'get /message/private/:byThisUser': 'PrivateMessageController.getMessage'
 
   /***************************************************************************
   *                                                                          *

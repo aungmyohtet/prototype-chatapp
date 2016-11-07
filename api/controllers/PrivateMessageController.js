@@ -53,5 +53,18 @@ module.exports = {
 				sails.sockets.broadcast(recepientSocket, 'privateMessage', messageToSent);
 			}
 		});
+	},
+
+	getMessage: function(req, res) {
+		var peerId = req.param('byThisUser');
+		var currentUserId = req.session.userId;
+		var criteria = {or: [{from: peerId, to: currentUserId},{from: currentUserId, to: peerId}]};
+		PrivateMessage.find(criteria).populate('from').populate('to').exec(function(err, data) {
+      if (err) {
+				res.serverError(err);
+			} else {
+				res.json(data);
+			}
+		});
 	}
 };
