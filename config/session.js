@@ -76,7 +76,13 @@ module.exports.session = {
 
   // adapter: 'mongo',
   // url: 'mongodb://user:password@localhost:27017/dbname', // user, password and port optional
+  adapter: 'connect-mongo',
 
+  url: 'mongodb://aungmyohtet:aungmyohtet@ds031651.mlab.com:31651/dark-energy',
+  collection: 'sessions',
+  auto_reconnect: false,
+  ssl: false,
+  stringify: true
   /***************************************************************************
   *                                                                          *
   * Optional Values:                                                         *

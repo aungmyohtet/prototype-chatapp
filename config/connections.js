@@ -28,9 +28,9 @@ module.exports.connections = {
   * Installed by default.                                                    *
   *                                                                          *
   ***************************************************************************/
-  localDiskDb: {
+  /*localDiskDb: {
     adapter: 'sails-disk'
-  },
+  },*/
 
   /***************************************************************************
   *                                                                          *
@@ -47,6 +47,15 @@ module.exports.connections = {
   //   password: 'YOUR_MYSQL_PASSWORD', //optional
   //   database: 'YOUR_MYSQL_DB' //optional
   // },
+
+  someMongodbServer: {
+  adapter: 'sails-mongo',
+  host: 'ds031651.mlab.com',
+  port: 31651,
+  user: 'aungmyohtet', //optional
+  password: 'aungmyohtet', //optional
+  database: 'dark-energy' //optional
+}
 
   /***************************************************************************
   *                                                                          *
