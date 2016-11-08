@@ -269,6 +269,7 @@ module.exports = {
 							UserService.userDirectory[userData.team] = [];
 						}
 						UserService.userDirectory[userData.team].push(user);
+						sails.sockets.broadcast(userData.team, 'newRegisteredUser', user, req);
 						callback();
 					}
 				});

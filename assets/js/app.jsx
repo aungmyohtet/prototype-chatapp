@@ -7,6 +7,15 @@ var UserList = React.createClass({
     PubSub.publish( 'hello', e.currentTarget.id);
     currentChattingUserId = e.currentTarget.id;
   },
+
+  updateUserList: function(user) {
+    var users = this.state.users.slice(0);
+    users.push(user);
+    this.setState({
+      users: users
+    });
+  },
+
   updateOnlineUserStatus: function(userName){
     console.log("is Array");
     console.log(Array.isArray(this.state.users));
@@ -56,6 +65,11 @@ var UserList = React.createClass({
       console.log("new user arrived");
       //console.log(data.userName);
       self.updateOnlineUserStatus(data.userName);
+    });
+
+    io.socket.on('newRegisteredUser', function(user) {
+      console.log("a new user registered");
+      self.updateUserList(user);
     });
   },
 
