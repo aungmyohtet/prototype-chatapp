@@ -265,6 +265,10 @@ module.exports = {
 						callback(err);
 					} else {
 						userAuthData.user = user.id;
+						if (!(UserService.userDirectory.hasOwnProperty(userData.team))) {
+							UserService.userDirectory[userData.team] = [];
+						}
+						UserService.userDirectory[userData.team].push(user);
 						callback();
 					}
 				});
