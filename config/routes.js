@@ -33,7 +33,10 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
+    view: 'homepage',
+    locals: {
+      layout: null
+    }
   },
 
   'get /team': {
@@ -42,7 +45,10 @@ module.exports.routes = {
 
 
   'get /team/create': {
-    view: 'teamNew'
+    view: 'teamNew',
+    locals: {
+      layout: null
+    }
   },
 
   'post /team/create': 'TeamController.create',

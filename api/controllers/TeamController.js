@@ -16,7 +16,7 @@ module.exports = {
 
 			else if (team && !req.session.user) {
 				console.log("Team exists and not loggedin")
-				return res.view('teamLogin', {'teamName': teamName});
+				return res.view('teamLogin', {layout: null, 'teamName': teamName});
 			}
 
 			else if (team && req.session.user) {
@@ -25,7 +25,7 @@ module.exports = {
 
 			else {
 				console.log('homepage')
-				res.view('homepage');
+				res.view('homepage', {layout: null});
 			}
 		});
 
@@ -203,7 +203,7 @@ module.exports = {
 				return res.serverError(err)
 			}
 			else {
-        return res.view('teamCreationSuccess', {teamName: teamData.name});
+        return res.view('teamCreationSuccess', {layout:null, teamName: teamData.name});
 			}
 		});
 	},
@@ -215,9 +215,9 @@ module.exports = {
 			if (err) {
 				return res.serverError(err);
 			} else if (team) {
-				return res.view('teamRegister', {teamName : teamName});
+				return res.view('teamRegister', {layout:null, teamName : teamName});
 			} else {
-				return res.view('homepage');
+				return res.view('homepage', {layout:null});
 			}
 		});
 
