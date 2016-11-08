@@ -122,10 +122,12 @@ module.exports.sockets = {
   * disconnects                                                              *
   *                                                                          *
   ***************************************************************************/
-  // afterDisconnect: function(session, socket, cb) {
-  //   // By default: do nothing.
-  //   return cb();
-  // },
+  afterDisconnect: function(session, socket, cb) {
+    console.log("teamId is " + session.teamId);
+    console.log("userId is " + session.userId);
+    sails.sockets.broadcast(session.teamId,'userOffline', {userName: session.userName}, socket);
+    return cb();
+  }
 
   /***************************************************************************
   *                                                                          *

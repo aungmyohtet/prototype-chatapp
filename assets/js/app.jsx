@@ -16,6 +16,21 @@ var UserList = React.createClass({
     });
   },
 
+  updateOfflineUserStatus: function(userName) {
+    var users = this.state.users.slice(0);
+    for (var i = 0; i < users.length; i++) {
+      console.log("Status is now");
+      console.log(users[i].status);
+      if (users[i].userName == userName) {
+        users[i].status = "user-status-offline";
+      }
+    }
+    this.setState({
+      users: users
+    });
+
+  },
+
   updateOnlineUserStatus: function(userName){
     console.log("is Array");
     console.log(Array.isArray(this.state.users));
@@ -70,6 +85,11 @@ var UserList = React.createClass({
     io.socket.on('newRegisteredUser', function(user) {
       console.log("a new user registered");
       self.updateUserList(user);
+    });
+
+    io.socket.on('userOffline', function(data) {
+      console.log("user goes offline.");
+      self.updateOfflineUserStatus(data.userName);
     });
   },
 

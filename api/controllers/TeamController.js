@@ -268,6 +268,7 @@ module.exports = {
 						if (!(UserService.userDirectory.hasOwnProperty(userData.team))) {
 							UserService.userDirectory[userData.team] = [];
 						}
+						user.status = "user-status-offline";
 						UserService.userDirectory[userData.team].push(user);
 						sails.sockets.broadcast(userData.team, 'newRegisteredUser', user, req);
 						callback();
